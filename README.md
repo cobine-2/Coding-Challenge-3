@@ -1,6 +1,8 @@
 Tech Challenge 3: Infrastructure as Code with Terraform and Ansible
+
+
 Introduction
-This document provides a step-by-step guide to completing Tech Challenge 3: Infrastructure as Code with Terraform and Ansible. It covers setting up the environment, deploying infrastructure, and configuring the system using Ansible.
+This document serves to be a step-by-step guide. It covers setting up the environment, deploying infrastructure, and configuring the system using Ansible.
 Prerequisites
 Before starting, ensure you have the following installed on your local machine:
 - AWS Account with IAM user having necessary permissions
@@ -10,28 +12,28 @@ Before starting, ensure you have the following installed on your local machine:
 - SSH Key Pair (Generated via `ssh-keygen` or via Terraform)
 Setting Up the Environment
 1. Clone the repository and navigate to the directory:
-
+   ```sh
    git clone git@github.com:your-username/Coding-Challenge-3.git
    cd Coding-Challenge-3
-
+   ```
 2. Initialize Terraform:
-
+   ```sh
    terraform init
-
+   ```
 3. Apply the Terraform configuration:
-
+   ```sh
    terraform apply -auto-approve
-
+   ```
 This will:
    - Generate `my-keypair.pem`
    - Provision the EC2 instance
    - Create S3 bucket and IAM roles
-
+   - Output the EC2 instance’s public IP
 4. SSH into the EC2 instance:
-
+   ```sh
    chmod 400 my-keypair.pem
    ssh -i my-keypair.pem ubuntu@<EC2_PUBLIC_IP>
-
+   ```
 Terraform Configuration
 Terraform is used to automate the provisioning of AWS infrastructure. The main Terraform file (`main.tf`) performs the following tasks:
 - Creates an SSH key pair for secure EC2 access
@@ -43,19 +45,19 @@ Terraform is used to automate the provisioning of AWS infrastructure. The main T
 Ansible Configuration
 Once Terraform provisions the EC2 instance, Ansible is used to install and configure Nginx.
 1. Install Ansible on the EC2 instance:
-
+   ```sh
    sudo apt update && sudo apt install -y ansible
-
+   ```
 2. Create an Ansible inventory file to manage the instance itself:
-
+   ```sh
    sudo mkdir -p /etc/ansible
    echo "[webserver]
    localhost ansible_connection=local" | sudo tee /etc/ansible/hosts
-
+   ```
 3. Create an Ansible playbook to install and configure Nginx:
-
+   ```sh
    nano playbook.yml
-
+   ```
 Paste the following YAML code inside the file:
 
 ---
@@ -78,24 +80,26 @@ Paste the following YAML code inside the file:
         dest: /var/www/html/index.html
 
 4. Run the Ansible playbook:
-   
+   ```sh
    ansible-playbook playbook.yml
-
+   ```
 5. Verify Nginx is running:
-
+   ```sh
    systemctl status nginx
-
+   ```
 Testing the Web Server
 To access the deployed webpage, open a browser and go to:
-
+   ```
    http://<EC2_PUBLIC_IP>
-
+   ```
 You should see the following message:
-
+   ```
    Hello, World!
+   ```
 
 Conclusion
 This project successfully demonstrates the provisioning of AWS infrastructure using Terraform and the configuration of an EC2 instance using Ansible. By following these steps, you have:
 - Provisioned an EC2 instance, Security Group, and S3 bucket using Terraform.
 - Configured EC2 with Ansible to install and enable Nginx.
 - Deployed a simple 'Hello, World!' webpage.
+
